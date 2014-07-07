@@ -12,6 +12,8 @@
 
 #import "ItemDetailViewController.h"
 
+#import "TableViewCell.h"
+
 
 @interface ItemsViewController ()
 
@@ -59,7 +61,8 @@
 - (id) init
 {
     //调用父类的指定初始化方法
-    self = [super initWithStyle:UITableViewStyleGrouped];
+    //self = [super initWithStyle:UITableViewStyleGrouped];
+    self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
         
         
@@ -90,12 +93,19 @@
 
 - (void)viewDidLoad
 {
+    
+    
     [super viewDidLoad];
+    
+    
     //must register a nib or a class for the identifier or connect a prototype cell in a storyboard'的解决办法
-    [self.tableView registerClass :[UITableViewCell class] forCellReuseIdentifier:@"HomepwnerCell"];
+    //[self.tableView registerClass :[UITableViewCell class] forCellReuseIdentifier:@"HomepwnerCell"];
     
     self.navigationController.navigationBar.translucent = NO;
-    self.automaticallyAdjustsScrollViewInsets = NO;
+    //self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    
+    
     
     /*
     self.tableView.sectionHeaderHeight = 0;
@@ -125,7 +135,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 0.1f;
+    return 0.0f;
 }
 
 - (void)didReceiveMemoryWarning
@@ -158,15 +168,21 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"HomepwnerCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    static NSString *CellIdentifier = @"TableViewCell";
+    TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        //cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"TableViewCell" owner:self options:nil] lastObject];
     }
     
     Possession *p = [[[PossessionStore defaultStore] allPossessions] objectAtIndex:[indexPath row]];
-    [[cell textLabel] setText:[p description]];
+    
+    cell.leftLabel.text = [p possessionName];
+    cell.rightLabel.text = [NSString stringWithFormat:@"$%d",[p valueInDollars]];
+    
+    //[[cell textLabel] setText:[p description]];
     
     // Configure the cell...
     
